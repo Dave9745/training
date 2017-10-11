@@ -13,5 +13,12 @@ class AdvertController extends Controller
                                                                                                            'firstname' => 'Dave'));
         return new Response($content);
     }
+    
+    public function leaveAction(){
+        
+        $content = $this->get('templating')->render('SparrowPlatformBundle:Advert:leave.html.twig');
+        
+        return new Response($content);
+    }
 }
 
