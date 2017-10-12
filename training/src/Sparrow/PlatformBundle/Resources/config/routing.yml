@@ -1,9 +1,3 @@
-sparrow_platform_homepage:
-    path:     /
-    defaults: { _controller: SparrowPlatformBundle:Default:index }
-    
-#--------------------------------------------------------------------------------------  
-    
 sparrow_platform_home:
     path:      /
     defaults: { _controller: SparrowPlatformBundle:Advert:index }
