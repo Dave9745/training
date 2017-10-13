@@ -3,6 +3,7 @@
 namespace Sparrow\PlatformBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -23,20 +24,21 @@ class AdvertController extends Controller
         return new Response($content);
     }
     
-     public function viewAction($id)
+     public function viewAction($id, Request $request)
      {
-          return new Response("Ad number : ".$id);
+          $tag = $request->query->get('tag');
+          
+          return new Response("Ad number : ".$id." with tag '".$tag."'");
      }
-     
-     public function viewSlugAction($slug, $year, $_format)
+    
+    //----------------------------------------------------------------------------------------------------------
+    public function viewSlugAction($slug, $year, $_format)
     {
         return new Response(
             "On pourrait afficher l'annonce correspondant au
             slug '".$slug."', créée en ".$year." et au format ".$_format."."
         );
     }
-    
-    //----------------------------------------------------------------------------------------------------------
     
     public function helloAction(){
         
