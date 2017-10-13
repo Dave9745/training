@@ -1,25 +1,48 @@
 sparrow_platform_home:
-    path:      /
-    defaults: { _controller: SparrowPlatformBundle:Advert:index }
-    
+    path:      /{page}
+    defaults:
+       _controller: SparrowPlatformBundle:Advert:index
+       page:        1
+    requirements:
+        page: \d*
+        
 sparrow_platform_view:
     path:      /advert/{id}
-    defaults: { _controller: SparrowPlatformBundle:Advert:view }
-    
-sparrow_platform_view_slug:
-    path:      /{year}/{slug}.{_format}
-    defaults: 
-        _controller: SparrowPlatformBundle:Advert:viewSlug
-        format:      html
+    defaults:
+        _controller: SparrowPlatformBundle:Advert:view
     requirements:
-        year:   \d{4}
-        format: html|xml
+        id: \d+
+
     
 sparrow_platform_add:
     path:      /add
     defaults: { _controller: SparrowPlatformBundle:Advert:add }
     
+sparrow_platform_edit:
+    path:      /edit/{id}
+    defaults:
+        _controller: SparrowPlatformBundle:Advert:edit
+    requirements:
+        id: \d+
+
+sparrow_platform_delete:
+    path:      /delete/{id}
+    defaults:
+        _controller: SparrowPlatformBundle:Advert:delete
+    requirements:
+        id: \d+
+
+    
 #--------------------------------------------------------------------------------------  
+    
+sparrow_platform_view_slug:
+    path:      /{year}/{slug}.{_format}
+    defaults: 
+        _controller: SparrowPlatformBundle:Advert:viewSlug
+        _format:      html
+    requirements:
+        year:   \d{4}
+        format: html|xml
 
 hello_the_world:
     path:     /hello-world
