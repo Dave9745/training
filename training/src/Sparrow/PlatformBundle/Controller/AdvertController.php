@@ -8,14 +8,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 
 class AdvertController extends Controller
 {
-    public function indexAction()
+    public function indexAction($page)
     {
-      
-        $url = $this->get('router')->generate(
+        //Génération d'URL
+        /*$url = $this->get('router')->generate(
             'sparrow_platform_view', 
             array('id' => 5),
             UrlGeneratorInterface::ABSOLUTE_URL
@@ -23,18 +25,24 @@ class AdvertController extends Controller
         
           $content = $this->get('templating')->render('SparrowPlatformBundle:Advert:index.html.twig', array('name' => 'Sparrow','firstname' => 'Dave', 'url' => $url));
         
-        return new Response($content);
+        return new Response($content); */
+        
+         if ($page < 1) {
+            throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
+         }
+         
+         return $this->render('SparrowPlatformBundle:Advert:index.html.twig');
     }
     
-    public function viewAction($id, Request $request)
+    public function viewAction($id)
     {
         //Récupération de tag URL et renvoie d'une réponse (Request $request en argument) 
-        $tag = $request->query->get('tag');
+        /*$tag = $request->query->get('tag');
 
          return $this->get('templating')->renderResponse(
            'SparrowPlatformBundle:Advert:view.html.twig',
             array('id'  => $id, 'tag' => $tag)
-         ); 
+         ); */
 
         //Faire une redirection (Ne pas oublier le "use")
         /* $url = $this->get('router')->generate('sparrow_platform_home');
@@ -71,12 +79,16 @@ class AdvertController extends Controller
         // On n'oublie pas de renvoyer une réponse
         return new Response("<body>Je suis une page de test, je n'ai rien à dire</body>"); */
         
+        return $this->render('SparrowPlatformBundle:Advert:view.html.twig', array(
+            'id' => $id
+        ));
         
     }
      
     public function addAction(Request $request)
     {
-      $session = $request->getSession();
+      //Utilisation de la session pour les messages flashs 
+      /*$session = $request->getSession();
 
       $session->getFlashBag()->add('info', 'Annonce bien enregistrée');
 
@@ -85,7 +97,30 @@ class AdvertController extends Controller
       $session->getFlashBag()->add('info', 'Oui oui, elle est bien enregistrée !');
 
       // Puis on redirige vers la page de visualisation de cette annonce
-      return $this->redirectToRoute('sparrow_platform_view', array('id' => 5));
+      return $this->redirectToRoute('sparrow_platform_view', array('id' => 5)); */
+        
+       if ($request->isMethod('POST')) {
+           $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+           return $this->redirectToRoute('sparrow_platform_view', array('id' => 5));
+       }
+
+       return $this->render('SparrrowPlatformBundle:Advert:add.html.twig');
+    }
+    
+    public function editAction($id, Request $request)
+    {
+    
+      if ($request->isMethod('POST')) {
+        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
+        return $this->redirectToRoute('oc_platform_view', array('id' => 5));
+      }
+
+      return $this->render('SparrowPlatformBundle:Advert:edit.html.twig');
+    }
+
+    public function deleteAction($id)
+    {
+      return $this->render('SparrowPlatformBundle:Advert:delete.html.twig');
     }
     
     //----------------------------------------------------------------------------------------------------------
