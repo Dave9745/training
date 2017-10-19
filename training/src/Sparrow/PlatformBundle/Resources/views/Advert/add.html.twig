@@ -1,0 +1,24 @@
+{% extends "SparrowPlatformBundle::layout.html.twig" %}
+
+{% block title %}
+  Ajouter une annonce - {{ parent() }}
+{% endblock %}
+
+{% block sparrowplatform_body %}
+
+  <h2>Ajouter une annonce</h2>
+
+  {{ include("SparrowPlatformBundle:Advert:form.html.twig") }}
+
+  <p>
+    Veuillez saisir votre annonce
+  </p>
+
+  <p>
+    <a href="{{ path('sparrow_platform_home')}}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'accueil
+    </a>
+  </p>
+  
+  {% endblock %}

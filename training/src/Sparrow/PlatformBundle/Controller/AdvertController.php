@@ -27,11 +27,30 @@ class AdvertController extends Controller
         
         return new Response($content); */
         
-         if ($page < 1) {
-            throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
-         }
-         
-         return $this->render('SparrowPlatformBundle:Advert:index.html.twig');
+           $listAdverts = array(
+                array(
+                  'title'   => 'Recherche développpeur Symfony',
+                  'id'      => 1,
+                  'author'  => 'Alexandre',
+                  'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
+                  'date'    => new \Datetime()),
+                array(
+                  'title'   => 'Mission de webmaster',
+                  'id'      => 2,
+                  'author'  => 'Hugo',
+                  'content' => 'Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…',
+                  'date'    => new \Datetime()),
+                array(
+                  'title'   => 'Offre de stage webdesigner',
+                  'id'      => 3,
+                  'author'  => 'Mathieu',
+                  'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
+                  'date'    => new \Datetime())
+            );
+
+            return $this->render('SparrowPlatformBundle:Advert:index.html.twig', array(
+              'listAdverts' => $listAdverts
+            ));
     }
     
     public function viewAction($id)
@@ -78,10 +97,17 @@ class AdvertController extends Controller
 
         // On n'oublie pas de renvoyer une réponse
         return new Response("<body>Je suis une page de test, je n'ai rien à dire</body>"); */
-        
-        return $this->render('SparrowPlatformBundle:Advert:view.html.twig', array(
-            'id' => $id
-        ));
+        $advert = array(
+            'title'   => 'Recherche développpeur Symfony2',
+            'id'      => $id,
+            'author'  => 'Alexandre',
+            'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
+            'date'    => new \Datetime()
+          );
+
+          return $this->render('SparrowPlatformBundle:Advert:view.html.twig', array(
+            'advert' => $advert
+          ));
         
     }
      
@@ -104,7 +130,7 @@ class AdvertController extends Controller
            return $this->redirectToRoute('sparrow_platform_view', array('id' => 5));
        }
 
-       return $this->render('SparrrowPlatformBundle:Advert:add.html.twig');
+       return $this->render('SparrowPlatformBundle:Advert:add.html.twig');
     }
     
     public function editAction($id, Request $request)
@@ -114,8 +140,18 @@ class AdvertController extends Controller
         $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
         return $this->redirectToRoute('oc_platform_view', array('id' => 5));
       }
+      
+      $advert = array(
+        'title'   => 'Recherche développpeur Symfony',
+        'id'      => $id,
+        'author'  => 'Alexandre',
+        'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
+        'date'    => new \Datetime()
+      );
 
-      return $this->render('SparrowPlatformBundle:Advert:edit.html.twig');
+      return $this->render('SparrowPlatformBundle:Advert:edit.html.twig', array(
+      'advert' => $advert
+    ));
     }
 
     public function deleteAction($id)
@@ -123,6 +159,23 @@ class AdvertController extends Controller
       return $this->render('SparrowPlatformBundle:Advert:delete.html.twig');
     }
     
+    public function menuAction()
+  {
+    // On fixe en dur une liste ici, bien entendu par la suite
+    // on la récupérera depuis la BDD !
+    $listAdverts = array(
+      array('id' => 1, 'title' => 'Recherche développeur Symfony'),
+      array('id' => 5, 'title' => 'Mission de webmaster'),
+      array('id' => 9, 'title' => 'Offre de stage webdesigner')
+    );
+
+    return $this->render('SparrowPlatformBundle:Advert:menu.html.twig', array(
+      // Tout l'intérêt est ici : le contrôleur passe
+      // les variables nécessaires au template !
+      'listAdverts' => $listAdverts
+    ));
+    
+  }
     //----------------------------------------------------------------------------------------------------------
     public function viewSlugAction($slug, $year, $_format)
     {
