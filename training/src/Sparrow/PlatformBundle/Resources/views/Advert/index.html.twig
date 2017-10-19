@@ -15,8 +15,26 @@
 
 {% extends "SparrowPlatformBundle::layout.html.twig" %}
 
-{% block title %}{{ parent() }} - Index{% endblock %}
-
-{% block body %}
-  Notre plateforme est un peu vide pour le moment, mais cela viendra !
+{% block title %}
+  Accueil - {{ parent() }}
 {% endblock %}
+
+{% block sparrowplatform_body %}
+
+  <h2>Liste des annonces</h2>
+
+  <ul>
+    {% for advert in listAdverts %}
+      <li>
+        <a href="{{ path('sparrow_platform_view', {'id': advert.id}) }}">
+          {{ advert.title }}
+        </a>
+        par {{ advert.author }},
+        le {{ advert.date|date('d/m/Y') }}
+      </li>
+    {% else %}
+      <li>Pas (encore !) d'annonces</li>
+    {% endfor %}
+  </ul>
+  
+  {% endblock %}
