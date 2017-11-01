@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
-
 class AdvertController extends Controller
 {
     public function indexAction($page)
@@ -27,30 +26,38 @@ class AdvertController extends Controller
         
         return new Response($content); */
         
-           $listAdverts = array(
-                array(
-                  'title'   => 'Recherche développpeur Symfony',
-                  'id'      => 1,
-                  'author'  => 'Alexandre',
-                  'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
-                  'date'    => new \Datetime()),
-                array(
-                  'title'   => 'Mission de webmaster',
-                  'id'      => 2,
-                  'author'  => 'Hugo',
-                  'content' => 'Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…',
-                  'date'    => new \Datetime()),
-                array(
-                  'title'   => 'Offre de stage webdesigner',
-                  'id'      => 3,
-                  'author'  => 'Mathieu',
-                  'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
-                  'date'    => new \Datetime())
-            );
+        //test service antispam
+        $antispam = $this->container->get('sparrow_platform.antispam');
 
-            return $this->render('SparrowPlatformBundle:Advert:index.html.twig', array(
-              'listAdverts' => $listAdverts
-            ));
+        $text = '...';
+        if ($antispam->isSpam($text)) {
+          throw new \Exception('Votre message a été détecté comme spam !');
+        }
+        
+        $listAdverts = array(
+             array(
+               'title'   => 'Recherche développpeur Symfony',
+               'id'      => 1,
+               'author'  => 'Alexandre',
+               'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
+               'date'    => new \Datetime()),
+             array(
+               'title'   => 'Mission de webmaster',
+               'id'      => 2,
+               'author'  => 'Hugo',
+               'content' => 'Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…',
+               'date'    => new \Datetime()),
+             array(
+               'title'   => 'Offre de stage webdesigner',
+               'id'      => 3,
+               'author'  => 'Mathieu',
+               'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
+               'date'    => new \Datetime())
+        );
+
+        return $this->render('SparrowPlatformBundle:Advert:index.html.twig', array(
+          'listAdverts' => $listAdverts
+        ));
     }
     
     public function viewAction($id)
@@ -138,7 +145,7 @@ class AdvertController extends Controller
     
       if ($request->isMethod('POST')) {
         $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
-        return $this->redirectToRoute('oc_platform_view', array('id' => 5));
+        return $this->redirectToRoute('sparrow_platform_view', array('id' => 5));
       }
       
       $advert = array(

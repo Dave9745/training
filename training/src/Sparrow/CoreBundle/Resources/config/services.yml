@@ -1,0 +1,8 @@
+services:
+    sparrow_core.antispam:
+        class: Sparrow\CoreBundle\Antispam\CoreAntispam
+        arguments: 
+           - "@mailer"
+           - %locale%
+           - 5
+        

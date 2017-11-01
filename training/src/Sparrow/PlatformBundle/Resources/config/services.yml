@@ -1,4 +1,7 @@
 services:
-#    sparrow_platform.example:
-#        class: Sparrow\PlatformBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    sparrow_platform.antispam:
+        class: Sparrow\PlatformBundle\Antispam\SparrowAntispam
+        arguments: 
+            - "@mailer"
+            - %locale%
+            - 3

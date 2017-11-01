@@ -1,3 +1,7 @@
+core:
+    resource: "@CoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
 sparrow_platform:
     resource: "@SparrowPlatformBundle/Resources/config/routing.yml"
     prefix:   /platform

@@ -1,0 +1,16 @@
+core_homepage:
+    path:     /
+    defaults: { _controller: CoreBundle:Main:index }
+ 
+#Routes d'exercices
+sparrow_core_generation:
+    path: /urlgeneration
+    defaults: { _controller: CoreBundle:Main:generation }
+
+sparrow_core_generated:
+    path: /urlgenerated/{id}
+    defaults: { _controller: CoreBundle:Main:generated }
+    
+sparrow_core_antispam:
+    path: /antispam
+    defaults: { _controller: CoreBundle:Main:antispam }
