@@ -3,6 +3,15 @@ Welcome on this platform <br/><br/><br/><br/>
 
 -- Pour tester la génération d'URL cliquez <a href="{{ path('sparrow_core_generation') }}"> ici </a><br/><br/>
 -- Pour tester l'antispam cliquez <a href="{{ path('sparrow_core_antispam') }}"> ici </a><br/><br/>
+-- Pour tester la redirection cliquez <a href="{{ path('sparrow_core_redirect') }}"> ici </a><br/><br/>
+-- Pour tester le JSON cliquez <a href="{{ path('sparrow_core_json') }}"> ici.</a> (Ajoutez un tag pour plus d'excitation)<br/><br/>
+-- Pour aller sur la page de contact cliquez <a href="{{ path('sparrow_core_course') }}"> ici </a>
+{% for message in app.session.flashbag.get('info') %}
+    <p>{{ message }}</p>
+{% endfor %}
+{% for message in app.session.flashbag.get('I') %}
+    <p>{{ message }}</p>
+{% endfor %}
 
 
 
