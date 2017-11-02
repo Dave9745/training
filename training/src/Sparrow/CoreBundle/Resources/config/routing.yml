@@ -14,3 +14,15 @@ sparrow_core_generated:
 sparrow_core_antispam:
     path: /antispam
     defaults: { _controller: CoreBundle:Main:antispam }
+    
+sparrow_core_redirect:
+    path: /redirect
+    defaults: { _controller: CoreBundle:Main:redirect }
+    
+sparrow_core_json:
+     path: /json
+     defaults: { _controller: CoreBundle:Main:json }
+   
+sparrow_core_course:
+    path: /course
+    defaults: { _controller: CoreBundle:Main:course } 

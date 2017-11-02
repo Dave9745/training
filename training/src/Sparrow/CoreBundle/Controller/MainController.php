@@ -57,4 +57,51 @@ class MainController extends Controller
             return new Response('Pour continuer ajoutez un tag à l\'URL (?tag=nomDuTag). Il peut s\'agir de tout et de rien');
         }
     }
+    
+    //Fonction d'exercice sur la redirection
+    public function redirectAction(Request $request){
+        
+        $session = $request->getSession();
+
+        $session->getFlashBag()->add('info', '-- Vous avez été redirigé vers la page d\'accueil');
+
+        return $this->redirectToRoute('core_homepage');
+        
+    }
+    
+    //Fonction d'exercice sur le renvoi de "json"
+    public function jsonAction(Request $request){
+        
+        $text = $request->query->get('tag');
+        
+        if($request != ''){
+            
+            $response = new Response(json_encode(array('tag' => $text)));
+            
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response; 
+        
+        }else{
+            
+            $response = new Response(json_encode(array('tag' => 'null')));
+            
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response; 
+        }   
+        
+    }
+        
+    //Fonction de l'exercice du cours
+    public function courseAction(Request $request){
+        
+        $session = $request->getSession();
+
+        $session->getFlashBag()->add('I', '-- La page de contact n’est pas encore disponible');
+
+        return $this->redirectToRoute('core_homepage');
+        
+    }
+        
 }
