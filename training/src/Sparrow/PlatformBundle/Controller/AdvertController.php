@@ -2,12 +2,10 @@
 
 namespace Sparrow\PlatformBundle\Controller;
 
+use Sparrow\PlatformBundle\Entity\Advert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -104,62 +102,74 @@ class AdvertController extends Controller
 
         // On n'oublie pas de renvoyer une réponse
         return new Response("<body>Je suis une page de test, je n'ai rien à dire</body>"); */
-        $advert = array(
-            'title'   => 'Recherche développpeur Symfony2',
-            'id'      => $id,
-            'author'  => 'Alexandre',
-            'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-            'date'    => new \Datetime()
-          );
+        
+        // On récupère le repository
+        $repository = $this->getDoctrine()
+          ->getManager()
+          ->getRepository('SparrowPlatformBundle:Advert')
+        ;
 
-          return $this->render('SparrowPlatformBundle:Advert:view.html.twig', array(
-            'advert' => $advert
-          ));
+        // On récupère l'entité correspondante à l'id $id
+        $advert = $repository->find($id);
+
+        if (null === $advert) {
+          throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+        }
+
+        // Le render ne change pas, on passait avant un tableau, maintenant un objet
+        return $this->render('SparrowPlatformBundle:Advert:view.html.twig', array(
+          'advert' => $advert
+        ));
         
     }
      
     public function addAction(Request $request)
     {
-      //Utilisation de la session pour les messages flashs 
-      /*$session = $request->getSession();
+        //Utilisation de la session pour les messages flashs 
+        /*$session = $request->getSession();
 
-      $session->getFlashBag()->add('info', 'Annonce bien enregistrée');
+        $session->getFlashBag()->add('info', 'Annonce bien enregistrée');
 
-      // Le « flashBag » est ce qui contient les messages flash dans la session
-      // Il peut bien sûr contenir plusieurs messages :
-      $session->getFlashBag()->add('info', 'Oui oui, elle est bien enregistrée !');
+        // Le « flashBag » est ce qui contient les messages flash dans la session
+        // Il peut bien sûr contenir plusieurs messages :
+        $session->getFlashBag()->add('info', 'Oui oui, elle est bien enregistrée !');
 
-      // Puis on redirige vers la page de visualisation de cette annonce
-      return $this->redirectToRoute('sparrow_platform_view', array('id' => 5)); */
+        // Puis on redirige vers la page de visualisation de cette annonce
+        return $this->redirectToRoute('sparrow_platform_view', array('id' => 5)); */
+
+        // Création de l'entité
+        $advert = new Advert();
+        $advert->setTitle('Recherche développeur J2VA.');
+        $advert->setAuthor('Alexandro');
+        $advert->setContent("Nous recherchons un développeur J2VA débutant sur New York. Blabla…");
+        // On peut ne pas définir ni la date ni la publication,
+        // car ces attributs sont définis automatiquement dans le constructeur
+
+        // On récupère l'EntityManager
+        $em = $this->getDoctrine()->getManager();
+
+        // Étape 1 : On « persiste » l'entité
+        $em->persist($advert);
         
-       if ($request->isMethod('POST')) {
-           $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
-           return $this->redirectToRoute('sparrow_platform_view', array('id' => 5));
-       }
+        $advert2 = $em->getRepository('SparrowPlatformBundle:Advert')->find(1);
 
-       return $this->render('SparrowPlatformBundle:Advert:add.html.twig');
+        // On modifie cette annonce, en changeant la date à la date d'aujourd'hui
+        $advert2->setAuthor('toto');
+
+        $em->flush();
+
+        // Reste de la méthode qu'on avait déjà écrit
+        if ($request->isMethod('POST')) {
+          $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+
+          // Puis on redirige vers la page de visualisation de cettte annonce
+          return $this->redirectToRoute('sparrow_platform_view', array('id' => $advert->getId()));
+        }
+
+        // Si on n'est pas en POST, alors on affiche le formulaire
+        return $this->render('SparrowPlatformBundle:Advert:add.html.twig', array('advert' => $advert));
     }
     
-    public function editAction($id, Request $request)
-    {
-    
-      if ($request->isMethod('POST')) {
-        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
-        return $this->redirectToRoute('sparrow_platform_view', array('id' => 5));
-      }
-      
-      $advert = array(
-        'title'   => 'Recherche développpeur Symfony',
-        'id'      => $id,
-        'author'  => 'Alexandre',
-        'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
-        'date'    => new \Datetime()
-      );
-
-      return $this->render('SparrowPlatformBundle:Advert:edit.html.twig', array(
-      'advert' => $advert
-    ));
-    }
 
     public function deleteAction($id)
     {
