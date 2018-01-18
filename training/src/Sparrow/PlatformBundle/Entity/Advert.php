@@ -56,6 +56,11 @@ class Advert
      */
     private $published = true;
     
+    /**
+    * @ORM\OneToOne(targetEntity="Sparrow\PlatformBundle\Entity\Image", cascade={"persist"})
+    */
+    private $image;
+    
     
   
     public function __construct()
@@ -192,5 +197,29 @@ class Advert
     public function getPublished()
     {
         return $this->published;
+    }
+
+    /**
+     * Set image
+     *
+     * @param \Sparrow\PlatformBundle\Entity\Image $image
+     *
+     * @return Advert
+     */
+    public function setImage(\Sparrow\PlatformBundle\Entity\Image $image = null)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return \Sparrow\PlatformBundle\Entity\Image
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }
