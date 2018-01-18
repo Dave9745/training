@@ -3,6 +3,7 @@
 namespace Sparrow\PlatformBundle\Controller;
 
 use Sparrow\PlatformBundle\Entity\Advert;
+use Sparrow\PlatformBundle\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,25 +14,7 @@ class AdvertController extends Controller
 {
     public function indexAction($page)
     {
-        //Génération d'URL
-        /*$url = $this->get('router')->generate(
-            'sparrow_platform_view', 
-            array('id' => 5),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        
-          $content = $this->get('templating')->render('SparrowPlatformBundle:Advert:index.html.twig', array('name' => 'Sparrow','firstname' => 'Dave', 'url' => $url));
-        
-        return new Response($content); */
-        
-        //test service antispam
-        $antispam = $this->container->get('sparrow_platform.antispam');
-
-        $text = '...';
-        if ($antispam->isSpam($text)) {
-          throw new \Exception('Votre message a été détecté comme spam !');
-        }
-        
+       
         $listAdverts = array(
              array(
                'title'   => 'Recherche développpeur Symfony',
@@ -60,48 +43,6 @@ class AdvertController extends Controller
     
     public function viewAction($id)
     {
-        //Récupération de tag URL et renvoie d'une réponse (Request $request en argument) 
-        /*$tag = $request->query->get('tag');
-
-         return $this->get('templating')->renderResponse(
-           'SparrowPlatformBundle:Advert:view.html.twig',
-            array('id'  => $id, 'tag' => $tag)
-         ); */
-
-        //Faire une redirection (Ne pas oublier le "use")
-        /* $url = $this->get('router')->generate('sparrow_platform_home');
-
-        return new RedirectResponse($url); */
-
-        //Faire une redirection (Pas besoin du "use")
-        /*$url = $this->get('router')->generate('sparrow_platform_home');
-
-          return $this->redirect($url); */
-
-        //Faire une redirection (Pas besoin du "use")
-        //return $this->redirectToRoute('sparrow_platform_home');
-
-        //Retourner une réponse en JSON ex:1
-        /*$response = new Response(json_encode(array('id' => $id)));
-
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response; */
-
-        //return new JsonResponse(array('id' => $id));
-
-        //variables de session
-        // Récupération de la session
-        /*$session = $request->getSession();
-
-        // On récupère le contenu de la variable user_id
-        $userId = $session->get('user_id');
-
-        // On définit une nouvelle valeur pour cette variable user_id
-        $session->set('user_id', 91);
-
-        // On n'oublie pas de renvoyer une réponse
-        return new Response("<body>Je suis une page de test, je n'ai rien à dire</body>"); */
         
         // On récupère le repository
         $repository = $this->getDoctrine()
@@ -125,36 +66,28 @@ class AdvertController extends Controller
      
     public function addAction(Request $request)
     {
-        //Utilisation de la session pour les messages flashs 
-        /*$session = $request->getSession();
-
-        $session->getFlashBag()->add('info', 'Annonce bien enregistrée');
-
-        // Le « flashBag » est ce qui contient les messages flash dans la session
-        // Il peut bien sûr contenir plusieurs messages :
-        $session->getFlashBag()->add('info', 'Oui oui, elle est bien enregistrée !');
-
-        // Puis on redirige vers la page de visualisation de cette annonce
-        return $this->redirectToRoute('sparrow_platform_view', array('id' => 5)); */
-
-        // Création de l'entité
+        
         $advert = new Advert();
-        $advert->setTitle('Recherche développeur J2VA.');
-        $advert->setAuthor('Alexandro');
-        $advert->setContent("Nous recherchons un développeur J2VA débutant sur New York. Blabla…");
+        $advert->setTitle('Recherche développeur Symfony.');
+        $advert->setAuthor('Jack');
+        $advert->setContent("Nous recherchons un développeur symfony débutant sur LA. Blabla…");
+        
+        // Création de l'entité Image
+        $image = new Image();
+        $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+        $image->setAlt('Job de rêve');
+
+        // On lie l'image à l'annonce
+        $advert->setImage($image);
+        
         // On peut ne pas définir ni la date ni la publication,
         // car ces attributs sont définis automatiquement dans le constructeur
 
         // On récupère l'EntityManager
         $em = $this->getDoctrine()->getManager();
 
-        // Étape 1 : On « persiste » l'entité
+        // Étape 1 : On « persiste » les entités
         $em->persist($advert);
-        
-        $advert2 = $em->getRepository('SparrowPlatformBundle:Advert')->find(1);
-
-        // On modifie cette annonce, en changeant la date à la date d'aujourd'hui
-        $advert2->setAuthor('toto');
 
         $em->flush();
 
