@@ -4,6 +4,7 @@ namespace Sparrow\PlatformBundle\Controller;
 
 use Sparrow\PlatformBundle\Entity\Advert;
 use Sparrow\PlatformBundle\Entity\Image;
+use Sparrow\PlatformBundle\Entity\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,22 +45,27 @@ class AdvertController extends Controller
     public function viewAction($id)
     {
         
-        // On récupère le repository
-        $repository = $this->getDoctrine()
-          ->getManager()
-          ->getRepository('SparrowPlatformBundle:Advert')
-        ;
+        $em = $this->getDoctrine()->getManager();
 
-        // On récupère l'entité correspondante à l'id $id
-        $advert = $repository->find($id);
+        // On récupère l'annonce $id
+        $advert = $em->getRepository('SparrowPlatformBundle:Advert')->find($id);
 
         if (null === $advert) {
           throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
         }
+        
+         // On récupère la liste des candidatures de cette annonce
+        $listApplications = $em
+          ->getRepository('SparrowPlatformBundle:Application')
+          ->findBy(array('advert' => $advert))
+        ;
+        
+        //var_dump($listApplications);
 
         // Le render ne change pas, on passait avant un tableau, maintenant un objet
         return $this->render('SparrowPlatformBundle:Advert:view.html.twig', array(
-          'advert' => $advert
+          'advert' => $advert,
+          'listApplications' => $listApplications
         ));
         
     }
@@ -69,7 +75,7 @@ class AdvertController extends Controller
         
         $advert = new Advert();
         $advert->setTitle('Recherche développeur Symfony.');
-        $advert->setAuthor('Jack');
+        $advert->setAuthor('Alex');
         $advert->setContent("Nous recherchons un développeur symfony débutant sur LA. Blabla…");
         
         // Création de l'entité Image
@@ -80,6 +86,20 @@ class AdvertController extends Controller
         // On lie l'image à l'annonce
         $advert->setImage($image);
         
+        // Création d'une première candidature
+        $application1 = new Application();
+        $application1->setAuthor('Marine');
+        $application1->setContent("J'ai toutes les qualités requises.");
+
+        // Création d'une deuxième candidature par exemple
+        $application2 = new Application();
+        $application2->setAuthor('Sophie');
+        $application2->setContent("Je suis très motivée.");
+
+        // On lie les candidatures à l'annonce
+        $application1->setAdvert($advert);
+        $application2->setAdvert($advert);
+        
         // On peut ne pas définir ni la date ni la publication,
         // car ces attributs sont définis automatiquement dans le constructeur
 
@@ -88,6 +108,9 @@ class AdvertController extends Controller
 
         // Étape 1 : On « persiste » les entités
         $em->persist($advert);
+        $em->persist($image);
+        $em->persist($application1);
+        $em->persist($application2);
 
         $em->flush();
 

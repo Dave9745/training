@@ -61,6 +61,12 @@ class Advert
     */
     private $image;
     
+    /**
+    * @ORM\ManyToMany(targetEntity="Sparrow\PlatformBundle\Entity\Category", cascade={"persist"})
+    */
+    private $categories;
+
+    
     
   
     public function __construct()
@@ -221,5 +227,39 @@ class Advert
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Add category
+     *
+     * @param \Sparrow\PlatformBundle\Entity\Category $category
+     *
+     * @return Advert
+     */
+    public function addCategory(\Sparrow\PlatformBundle\Entity\Category $category)
+    {
+        $this->categories[] = $category;
+
+        return $this;
+    }
+
+    /**
+     * Remove category
+     *
+     * @param \Sparrow\PlatformBundle\Entity\Category $category
+     */
+    public function removeCategory(\Sparrow\PlatformBundle\Entity\Category $category)
+    {
+        $this->categories->removeElement($category);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }
