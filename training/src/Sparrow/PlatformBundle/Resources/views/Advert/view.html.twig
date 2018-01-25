@@ -15,6 +15,15 @@
   <div class="well">
     {{ advert.content }}
   </div>
+  
+{% if not advert.categories.empty %}
+  <p>
+    Cette annonce est parue dans les catégories suivantes :<br/>
+{% for category in advert.categories %}
+      <li>{{ category.name }}</li>{% if not loop.last %}{% endif %}
+{% endfor %}
+  </p>
+{% endif %}
 
   <p>
     <a href="{{ path('sparrow_platform_home') }}" class="btn btn-default">
