@@ -61,6 +61,12 @@ class Advert
     */
     private $image;
     
+    /**
+    * @ORM\ManyToMany(targetEntity="Sparrow\PlatformBundle\Entity\Category", cascade={"persist"})
+    */
+    private $categories;
+
+    
     
   
     public function __construct()
@@ -197,5 +203,29 @@ class Advert
     public function getPublished()
     {
         return $this->published;
+    }
+
+    /**
+     * Set image
+     *
+     * @param \Sparrow\PlatformBundle\Entity\Image $image
+     *
+     * @return Advert
+     */
+    public function setImage(\Sparrow\PlatformBundle\Entity\Image $image = null)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return \Sparrow\PlatformBundle\Entity\Image
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }

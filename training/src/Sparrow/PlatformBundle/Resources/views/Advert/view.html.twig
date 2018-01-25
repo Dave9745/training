@@ -29,6 +29,12 @@
       <i class="glyphicon glyphicon-trash"></i>
       Supprimer l'annonce
     </a>
-  </p>
-
+  </p><br/>
+  
+  <h1>Candidatures</h1>
+{% for listApplication in listApplications %}
+    <li><strong>De:</strong> {{listApplication.author}}</li>
+    <li><strong>Le:</strong> {{listApplication.date|date("d/m/Y")}} <strong>à:</strong> {{listApplication.date|date("H:i:s")}}</li>
+    <li><strong>Message:</strong> {{listApplication.content}}</li><br/><br/>
+{% endfor %}
 {% endblock %}
